@@ -10,8 +10,8 @@ pipeline {
     }
     stage('Run Tests') {
       steps {
-        sh 'pip install -r requirements.txt'
-        sh 'pytest -v'
+        bat 'pip install -r requirements.txt'
+        bat 'pytest -v'
       }
     }
     stage('Build Docker Image') {
@@ -23,7 +23,7 @@ pipeline {
     }
     stage('Run Container (smoke test)') {
       steps {
-        sh """
+        bat """
           docker run --rm -d -p 5000:5000 --name test_container ${IMAGE_NAME}:${IMAGE_TAG}
           sleep 5
           curl -fsS http://localhost:5000/
