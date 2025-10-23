@@ -2,6 +2,9 @@ from flask import Flask
 
 def create_app():
     app = Flask(__name__)
-    from .routes import main
-    app.register_blueprint(main)
+
+    @app.route("/")
+    def index():
+        return "<h2>Flask Form</h2>"
+
     return app

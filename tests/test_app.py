@@ -1,5 +1,9 @@
 from app import create_app
+import sys
+import os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
+from app import create_app
 def test_index_page():
     app = create_app()
     client = app.test_client()
@@ -18,3 +22,4 @@ def test_form_submission():
 
     response_text = response.data.decode('utf-8')
     assert "Hello, Alice! Your message has been received." in response_text
+
