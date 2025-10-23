@@ -3,11 +3,12 @@ from flask import Flask, request
 def create_app():
     app = Flask(__name__)
 
-    @app.route("/", methods=['GET', 'POST'])  # <--- إضافة POST هنا
+    @app.route("/", methods=['GET', 'POST'])
     def index():
         if request.method == 'POST':
             name = request.form.get('name')
-            return f"Hello, {name}!"
+            # أرسل النص الذي يتوقعه الاختبار
+            return f"Hello, {name}! Your message has been received."
         return "<h2>Flask Form</h2>"
 
     return app
