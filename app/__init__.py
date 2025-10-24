@@ -7,7 +7,6 @@ def create_app():
     def index():
         if request.method == 'POST':
             name = request.form.get('name')
-            # أرسل النص الذي يتوقعه الاختبار
             return f"Hello, {name}! Your message has been received."
         return "<h2>Flask Form</h2>"
 

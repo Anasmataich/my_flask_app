@@ -10,10 +10,9 @@ def test_index_page():
     response = client.get('/')
     assert response.status_code == 200
 
-    # تحويل bytes إلى string
     response_text = response.data.decode('utf-8')
-    assert "Flask Form" in response_text  # تأكد أن هذه الجملة موجودة في HTML
-
+    assert "Flask Form" in response_text  
+    
 def test_form_submission():
     app = create_app()
     client = app.test_client()

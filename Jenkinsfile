@@ -2,7 +2,6 @@ pipeline {
     agent any
 
     environment {
-        // متغيرات البيئة إن احتجت
         IMAGE_NAME = "my_flask_app:dev"
         CONTAINER_NAME = "flask_test_container"
     }
@@ -19,7 +18,6 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                // تأكد أنك في جذر المشروع
                 dir("${WORKSPACE}") {
                     bat 'python -m pip install --upgrade pip'
                     bat 'pip install -r requirements.txt'
@@ -30,7 +28,6 @@ pipeline {
         stage('Run Tests') {
             steps {
                 dir("${WORKSPACE}") {
-                    // إضافة المشروع إلى PYTHONPATH لتفادي ModuleNotFoundError
                     bat """
                     set PYTHONPATH=%CD%
                     pytest -v
@@ -50,7 +47,6 @@ pipeline {
         stage('Run Container (smoke test)') {
             steps {
                 dir("${WORKSPACE}") {
-                    // تشغيل الحاوية مؤقتًا للتأكد من عمل التطبيق
                     bat """
                     docker run --rm -d -p 5000:5000 --name %CONTAINER_NAME% %IMAGE_NAME%
                     timeout /t 5
