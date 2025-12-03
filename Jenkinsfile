@@ -7,6 +7,7 @@ pipeline {
     }
 
     stages {
+
         stage('Checkout SCM') {
             steps {
                 checkout([$class: 'GitSCM',
@@ -19,8 +20,11 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 dir("${WORKSPACE}") {
-                    bat 'python -m pip install --upgrade pip'
-                    bat 'pip install -r requirements.txt'
+                    bat """
+                    python --version
+                    python -m pip install --upgrade pip
+                    python -m pip install -r requirements.txt
+                    """
                 }
             }
         }
@@ -30,7 +34,7 @@ pipeline {
                 dir("${WORKSPACE}") {
                     bat """
                     set PYTHONPATH=%CD%
-                    pytest -v
+                    python -m pytest -v
                     """
                 }
             }
@@ -46,14 +50,12 @@ pipeline {
 
         stage('Run Container (smoke test)') {
             steps {
-                dir("${WORKSPACE}") {
-                    bat """
-                    docker run --rm -d -p 5000:5000 --name %CONTAINER_NAME% %IMAGE_NAME%
-                    timeout /t 5
-                    curl -fsS http://localhost:5000/
-                    docker stop %CONTAINER_NAME%
-                    """
-                }
+                bat """
+                docker run --rm -d -p 5000:5000 --name %CONTAINER_NAME% %IMAGE_NAME%
+                timeout /t 5 >NUL
+                curl -fsS http://localhost:5000/
+                docker stop %CONTAINER_NAME%
+                """
             }
         }
     }
