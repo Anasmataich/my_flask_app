@@ -29,45 +29,26 @@ pipeline {
             }
         }
 
-       stage('Run Tests') {
-        parallel {
-        stage('Test Suite 1') {
-            steps {
-                script {
-                    if (isUnix()) {
-                        sh '''
-                            . venv/bin/activate
-                            pytest test_app.py --junitxml=report1.xml
-                        '''
-                    } else {
-                        bat '''
-                            call venv\\Scripts\\activate.bat
-                            pytest test_app.py --junitxml=report1.xml
-                        '''
+        stage('Run Tests') {
+            parallel {
+
+                stage('Test Suite 1') {
+                    steps {
+                        bat """
+                        python -m pytest test_app.py --junitxml=report1.xml
+                        """
+                    }
+                }
+
+                stage('Test Suite 2') {
+                    steps {
+                        bat """
+                        python -m pytest test_app_2.py --junitxml=report2.xml
+                        """
                     }
                 }
             }
         }
-        
-        stage('Test Suite 2') {
-            steps {
-                script {
-                    if (isUnix()) {
-                        sh '''
-                            . venv/bin/activate
-                            pytest test_app_2.py --junitxml=report2.xml
-                        '''
-                    } else {
-                        bat '''
-                            call venv\\Scripts\\activate.bat
-                            pytest test_app_2.py --junitxml=report2.xml
-                        '''
-                    }
-                }
-            }
-        }
-    }
-}
 
         stage('Build Docker Image') {
             steps {
